@@ -4,3 +4,7 @@ let board = {
 }
 return {board}
 }
+
+function player (name, marker) {
+  return {name, marker}
+}
