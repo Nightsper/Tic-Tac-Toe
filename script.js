@@ -30,6 +30,13 @@ function gameFlow() {
       return
     }
       else (gameboard.board.array[i] = currentPlayer.marker)
+      
+    if (currentPlayer == player1) {
+        currentPlayer = player2
+    }
+      else if (currentPlayer == player2) {
+        currentPlayer = player1
+      }
 }
 
 return {placeMarker}
