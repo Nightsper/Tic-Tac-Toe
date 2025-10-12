@@ -1,0 +1,32 @@
+body {
+  background: #29292C;
+  display: flex;
+}
+
+#board {
+  background-color: #213555;
+  width: 45rem;
+  height: 45rem;
+  margin: auto;
+  margin-top: 100px;
+  padding: 20px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center ;
+  align-items: center;
+}
+
+.tiles {
+  background-color: #3E5879;
+  color: #F5EFE7;
+  width: 12.75rem;
+  height: 12.75rem;
+  border-radius: 20px;
+  font-size: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
