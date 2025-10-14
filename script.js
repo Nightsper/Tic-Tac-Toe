@@ -18,8 +18,14 @@ function gameFlow() {
   let boardUI = document.querySelector("#board")
   let tiles = document.querySelectorAll(".tiles")
   
+  let roundState;
+  
   function placeMarker(i) {
-    if (gameboard.board.array[i] == "X" || gameboard.board.array[i] == "O") {
+    console.log(roundState)
+    if (roundState) {
+      return console.log(`roundState is ${roundState}`)
+    }
+    else if (gameboard.board.array[i] == "X" || gameboard.board.array[i] == "O") {
       return
     }
     else if (gameboard.board.array[i] == "") {
@@ -33,7 +39,7 @@ function gameFlow() {
       return
     }
     
-    checkWin(currentPlayer)
+    checkWin(currentPlayer, gameboard.board.array, roundState)
     
     switch (currentPlayer) {
       case player1:
@@ -46,17 +52,12 @@ function gameFlow() {
     
   }
   
-  tiles.forEach(tile => {
-    tile.addEventListener("click", function() {
-      placeMarker(this.id)
-    })
-  })
   
-  return { placeMarker }
+  return { placeMarker, tiles}
 }
 
-
-function checkWin(currentPlayer) {
+function checkWin(currentPlayer, gameboard, roundState) {
+  
   const winningCases = [
     [0, 1, 2],
     [3, 4, 5],
@@ -81,17 +82,25 @@ function checkWin(currentPlayer) {
       }
     })
     
-    if (JSON.stringify(winCase) !== JSON.stringify(checkArr)) {
-      
+    if (JSON.stringify(winCase) == JSON.stringify(checkArr)) {
+      roundState = true;
+      console.log(roundState)
+      console.log(`${currentPlayer.name} is the winner!`)
+    }
+    else if (JSON.stringify(winCase) !== JSON.stringify(checkArr)) {
       checkArr = []
     }
-    else if (JSON.stringify(winCase) == JSON.stringify(checkArr)) {
-      console.log(`${currentPlayer.name} is the winner!`)
-      
+    else if (!(gameboard.includes(""))) {
+      return console.log("It's a tie")
     }
-    
   })
-  
 }
 
 const game = gameFlow()
+
+game.tiles.forEach((tile, i) => {
+  tile.addEventListener("click", () => {
+    
+    game.placeMarker(i)
+  })
+})
