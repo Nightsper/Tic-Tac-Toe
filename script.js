@@ -21,9 +21,9 @@ function gameFlow() {
   let roundState;
   
   function placeMarker(i) {
-    console.log(roundState)
-    if (roundState) {
-      return console.log(`roundState is ${roundState}`)
+    console.log(`placeMarker func says roundState is ${roundState}`)
+    if (roundState == true) {
+      return
     }
     else if (gameboard.board.array[i] == "X" || gameboard.board.array[i] == "O") {
       return
@@ -39,7 +39,10 @@ function gameFlow() {
       return
     }
     
-    checkWin(currentPlayer, gameboard.board.array, roundState)
+    if (checkWin(currentPlayer, gameboard.board.array) == true) {
+      console.log(`${currentPlayer} has won!`)
+    }
+    else {roundState = undefined}
     
     switch (currentPlayer) {
       case player1:
@@ -56,7 +59,7 @@ function gameFlow() {
   return { placeMarker, tiles}
 }
 
-function checkWin(currentPlayer, gameboard, roundState) {
+function checkWin(currentPlayer, gameboard) {
   
   const winningCases = [
     [0, 1, 2],
@@ -83,9 +86,7 @@ function checkWin(currentPlayer, gameboard, roundState) {
     })
     
     if (JSON.stringify(winCase) == JSON.stringify(checkArr)) {
-      roundState = true;
-      console.log(roundState)
-      console.log(`${currentPlayer.name} is the winner!`)
+      return true
     }
     else if (JSON.stringify(winCase) !== JSON.stringify(checkArr)) {
       checkArr = []
