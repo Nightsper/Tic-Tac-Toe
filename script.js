@@ -1,3 +1,5 @@
+let body = document.querySelector("body")
+
 function createBoard() {
   let board = {
     array: ["", "", "", "", "", "", "", "", ""]
@@ -10,13 +12,15 @@ function player(name, marker, marks) {
 }
 
 function gameFlow() {
-  let gameboard = createBoard()
+  let gameboard = createBoard();
   let player1 = player("player1", "X", []);
   let player2 = player("player2", "O", []);
   let currentPlayer = player1;
   
-  let boardUI = document.querySelector("#board")
-  let tiles = document.querySelectorAll(".tiles")
+  let boardUI = document.createElement("div");
+  boardUI.id = "board";
+  body.appendChild(boardUI);
+  
   
   let state = { roundState: false };
   
@@ -39,7 +43,6 @@ function gameFlow() {
       return
     }
     
-    
     checkWin(currentPlayer, gameboard.board.array, state)
     
     console.log(`placeMarker func says ${currentPlayer.name}'s array is ${currentPlayer.marks} and roundState is ${state.roundState}`)
@@ -52,26 +55,36 @@ function gameFlow() {
         currentPlayer = player1
         break;
     }
-    
   }
+    
+    for (let i = 0; i < 9; i++) {
+      let tiles = document.createElement("div");
+      tiles.className = "tiles";
+      tiles.id = `${i}`
+      boardUI.appendChild(tiles)
+      
+      tiles.addEventListener("click", () => {
+        
+        placeMarker(i)
+      }
+      )}
   
-  
-  return { placeMarker, tiles }
+  return { placeMarker }
 }
 
 
 function checkWin(currentPlayer, gameboard, state) {
   
   const winningCases = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6]
-]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ]
   
   let testArr = [];
   
@@ -79,8 +92,8 @@ function checkWin(currentPlayer, gameboard, state) {
     
     if (testArr.length >= 3) {
       
-      if(JSON.stringify(testArr) == JSON.stringify(winningCases[i - 1])) {
-       
+      if (JSON.stringify(testArr) == JSON.stringify(winningCases[i - 1])) {
+        
         state.roundState = true
         console.log(`${currentPlayer.name} has won!`)
       }
@@ -89,7 +102,7 @@ function checkWin(currentPlayer, gameboard, state) {
       return console.log("tie")
     }
     
-    else {testArr = []}
+    else { testArr = [] }
     
     if (state.roundState) {
       return
@@ -108,10 +121,5 @@ function checkWin(currentPlayer, gameboard, state) {
   }
 }
 
-const game = gameFlow()
+//const game = gameFlow()
 
-game.tiles.forEach((tile, i) => {
-  tile.addEventListener("click", () => {
-    game.placeMarker(i)
-  })
-})
