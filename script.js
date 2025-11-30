@@ -1,4 +1,6 @@
-let body = document.querySelector("body")
+let body = document.querySelector("body");
+let box = document.querySelector("#box");
+let startGameBtn = document.querySelector("#start-game-btn");
 
 function createBoard() {
   let board = {
@@ -11,7 +13,7 @@ function player(name, marker, marks) {
   return { name, marker, marks }
 }
 
-function gameFlow() {
+function gameStart() {
   let gameboard = createBoard();
   let player1 = player("player1", "X", []);
   let player2 = player("player2", "O", []);
@@ -33,11 +35,13 @@ function gameFlow() {
       return
     }
     else if (gameboard.board.array[i] == "") {
+      
       gameboard.board.array[i] = currentPlayer.marker
       
       currentPlayer.marks.push(i)
       
       boardUI.children[i].textContent = currentPlayer.marker
+      
     }
     else {
       return
@@ -56,18 +60,24 @@ function gameFlow() {
         break;
     }
   }
+  
+  for (let i = 0; i < 9; i++) {
+    let tiles = document.createElement("div");
+    tiles.className = "tiles";
+    tiles.id = `${i}`
+    boardUI.appendChild(tiles)
     
-    for (let i = 0; i < 9; i++) {
-      let tiles = document.createElement("div");
-      tiles.className = "tiles";
-      tiles.id = `${i}`
-      boardUI.appendChild(tiles)
-      
-      tiles.addEventListener("click", () => {
-        
-        placeMarker(i)
+    tiles.addEventListener("click", () => {
+      if (currentPlayer.name == "player1") {
+        tiles.style.color = ""
       }
-      )}
+      else if (currentPlayer.name == "player2") {
+        tiles.style.color = " "
+      }
+      
+      placeMarker(i)
+    })
+  }
   
   return { placeMarker }
 }
@@ -121,5 +131,7 @@ function checkWin(currentPlayer, gameboard, state) {
   }
 }
 
-//const game = gameFlow()
-
+startGameBtn.addEventListener("click", () => {
+  box.style.display = "none"
+  gameStart()
+})
