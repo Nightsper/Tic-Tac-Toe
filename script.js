@@ -97,23 +97,24 @@ function checkWin(currentPlayer, gameboard, state) {
   ]
   
   let testArr = [];
+  let counter = 0;
   
   for (let i = 0; i < winningCases.length; i++) {
     
-    if (testArr.length >= 3) {
-      
+    if (true) {
+      counter++
       if (JSON.stringify(testArr) == JSON.stringify(winningCases[i - 1])) {
         
         state.roundState = true
         console.log(`${currentPlayer.name} has won!`)
       }
     }
-    else if (!(gameboard.includes(""))) {
+    if (!(gameboard.includes("")) && counter > 7) {
       return console.log("tie")
     }
     
     else { testArr = [] }
-    
+    console.log(counter)
     if (state.roundState) {
       return
     }
