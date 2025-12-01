@@ -21,8 +21,21 @@ function gameStart() {
   
   let boardUI = document.createElement("div");
   boardUI.id = "board";
-  body.appendChild(boardUI);
   
+  let selectionBox = document.createElement("div");
+  selectionBox.id = "selection";
+  
+  let firstPick = document.createElement("div");
+  firstPick.id = "first-pick";
+  let x = document.createElement("div");
+  x.textContent = "x";
+  let o = document.createElement("div");
+  o.textContent = "o";
+  
+  
+  body.appendChild(boardUI);
+  body.appendChild(selectionBox);
+  selection.appendChild(firstPick);
   
   let state = { roundState: false };
   
@@ -108,16 +121,17 @@ function checkWin(currentPlayer, gameboard, state) {
         state.roundState = true
         console.log(`${currentPlayer.name} has won!`)
       }
+      if (state.roundState) {
+      return
     }
+    }
+    
     if (!(gameboard.includes("")) && counter > 7) {
+      state.roundState = "tie"
       return console.log("tie")
     }
     
     else { testArr = [] }
-    console.log(counter)
-    if (state.roundState) {
-      return
-    }
     
     for (let j = 0; j < winningCases[i].length; j++) {
       
@@ -136,3 +150,6 @@ startGameBtn.addEventListener("click", () => {
   box.style.display = "none"
   gameStart()
 })
+
+box.style.display = "none"
+gameStart()

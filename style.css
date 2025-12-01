@@ -10,13 +10,14 @@ body {
   height: 45rem;
   margin: auto;
   margin-top: 80px;
-  padding: 20px;
-  border-radius: 20px;
+  padding: 20px 20px 0px 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  justify-items: center ;
+  justify-items: center;
   align-items: center;
 }
 
@@ -30,6 +31,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#selection {
+  background-color: #213555;
+  width: 45rem;
+  height: 15rem;
+  margin: auto;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#first-pick {
+  background-color: #3E5879;
+  width: 20rem;
+  height: 7rem;
+  border-radius: 10px;
 }
 
 h1 {
