@@ -1,7 +1,16 @@
 body {
-  background: #29292C;
+  background-color: #29292C;
+  color: whitesmoke;
   display: flex;
   flex-direction: column;
+}
+
+#score-display {
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  gap: 9rem;
+  margin: 90px auto;
 }
 
 #board {
@@ -9,7 +18,7 @@ body {
   width: 45rem;
   height: 45rem;
   margin: auto;
-  margin-top: 80px;
+  margin-top: 0;
   padding: 20px 20px 0px 20px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

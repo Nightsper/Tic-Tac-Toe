@@ -1,4 +1,5 @@
 let body = document.querySelector("body");
+let gameTitle = document.querySelector("h1");
 let box = document.querySelector("#box");
 let startGameBtn = document.querySelector("#start-game-btn");
 
@@ -9,35 +10,11 @@ function createBoard() {
   return { board }
 }
 
-function player(name, marker, marks) {
-  return { name, marker, marks }
+function player(name, marker, marks, score) {
+  return { name, marker, marks, score }
 }
 
 function gameStart() {
-  let gameboard = createBoard();
-  let player1 = player("player1", "X", []);
-  let player2 = player("player2", "O", []);
-  let currentPlayer = player1;
-  
-  let boardUI = document.createElement("div");
-  boardUI.id = "board";
-  
-  let selectionBox = document.createElement("div");
-  selectionBox.id = "selection";
-  
-  let firstPick = document.createElement("div");
-  firstPick.id = "first-pick";
-  let x = document.createElement("div");
-  x.textContent = "x";
-  let o = document.createElement("div");
-  o.textContent = "o";
-  
-  
-  body.appendChild(boardUI);
-  body.appendChild(selectionBox);
-  selection.appendChild(firstPick);
-  
-  let state = { roundState: false };
   
   function placeMarker(i) {
     
@@ -61,9 +38,7 @@ function gameStart() {
     }
     
     checkWin(currentPlayer, gameboard.board.array, state)
-    
-    console.log(`placeMarker func says ${currentPlayer.name}'s array is ${currentPlayer.marks} and roundState is ${state.roundState}`)
-    
+    updateScore(currentPlayer, state)
     switch (currentPlayer) {
       case player1:
         currentPlayer = player2
@@ -73,6 +48,71 @@ function gameStart() {
         break;
     }
   }
+  
+  function updateScore(currentPlayer, state) {
+    
+    if (state.roundState == "tie") {
+      tieScore += 1
+      
+      tieScoreDisplay.textContent = `Tie: ${tieScore}`
+    }
+    else if (currentPlayer.name == "player1" && state.roundState == true) {
+      currentPlayer.score++
+      
+      player1ScoreDisplay.textContent = `player1 score: ${player1.score}`
+    }
+    else if (currentPlayer.name == "player2" && state.roundState == true) {
+      currentPlayer.score++
+      
+      player2ScoreDisplay.textContent = `player2 score: ${player2.score}`
+    }
+    
+    
+  };
+  
+  
+  let gameboard = createBoard();
+  let player1 = player("player1", "X", [], 0);
+  let player2 = player("player2", "O", [], 0);
+  let currentPlayer = player1;
+  
+  let tieScore = 0;
+  
+  let scoreDisplay = document.createElement("div");
+  scoreDisplay.id = "score-display"
+  
+  let player1ScoreDisplay = document.createElement("div");
+  player1ScoreDisplay.textContent = `player1 score: ${player1.score}`
+  
+  let tieScoreDisplay = document.createElement("div");
+  tieScoreDisplay.textContent = `Tie: ${tieScore}`
+  
+  let player2ScoreDisplay = document.createElement("div");
+  player2ScoreDisplay.textContent = `player2 score: ${player2.score}`
+  
+  
+  let boardUI = document.createElement("div");
+  boardUI.id = "board";
+  
+  let selectionBox = document.createElement("div");
+  selectionBox.id = "selection";
+  
+  let firstPick = document.createElement("div");
+  firstPick.id = "first-pick";
+  let x = document.createElement("div");
+  x.textContent = "x";
+  let o = document.createElement("div");
+  o.textContent = "o";
+  
+  body.appendChild(scoreDisplay)
+  scoreDisplay.appendChild(player1ScoreDisplay);
+  scoreDisplay.appendChild(tieScoreDisplay);
+  scoreDisplay.appendChild(player2ScoreDisplay);
+  body.appendChild(boardUI);
+  body.appendChild(selectionBox);
+  selection.appendChild(firstPick);
+  
+  let state = { roundState: false };
   
   for (let i = 0; i < 9; i++) {
     let tiles = document.createElement("div");
@@ -89,10 +129,10 @@ function gameStart() {
       }
       
       placeMarker(i)
+      
     })
   }
   
-  return { placeMarker }
 }
 
 
@@ -106,7 +146,8 @@ function checkWin(currentPlayer, gameboard, state) {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
+    []
   ]
   
   let testArr = [];
@@ -120,18 +161,21 @@ function checkWin(currentPlayer, gameboard, state) {
         
         state.roundState = true
         console.log(`${currentPlayer.name} has won!`)
+        
       }
       if (state.roundState) {
-      return
-    }
+        return
+      }
     }
     
     if (!(gameboard.includes("")) && counter > 7) {
       state.roundState = "tie"
+      
       return console.log("tie")
     }
     
     else { testArr = [] }
+    
     
     for (let j = 0; j < winningCases[i].length; j++) {
       
@@ -144,6 +188,7 @@ function checkWin(currentPlayer, gameboard, state) {
     }
     
   }
+  
 }
 
 startGameBtn.addEventListener("click", () => {
@@ -151,5 +196,6 @@ startGameBtn.addEventListener("click", () => {
   gameStart()
 })
 
+gameTitle.style.display = "none"
 box.style.display = "none"
 gameStart()
