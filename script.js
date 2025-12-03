@@ -1,8 +1,3 @@
-let body = document.querySelector("body");
-let gameTitle = document.querySelector("h1");
-let box = document.querySelector("#box");
-let startGameBtn = document.querySelector("#start-game-btn");
-
 function createBoard() {
   let board = {
     array: ["", "", "", "", "", "", "", "", ""]
@@ -17,6 +12,9 @@ function player(name, marker, marks, score) {
 function gameStart() {
   
   function placeMarker(i) {
+    
+    firstPickBox.style.display = "none";
+    firstPickQuestion.style.display = "none";
     
     if (state.roundState == true) {
       return
@@ -72,13 +70,29 @@ function gameStart() {
     
   };
   
+  function toggle() {
+    if (currentPlayer.name == "player1") {
+      leftPick.classList.toggle("selected-first-pick");
+    }
+    else if (currentPlayer.name == "player2") {
+      rightPick.classList.toggle("selected-first-pick");
+    }
+  }
+  
+  
+  let body = document.querySelector("body");
+  
+  let boardUI = document.createElement("div");
+  boardUI.id = "board";
+  let selectionBox = document.createElement("div");
+  selectionBox.id = "selection";
   
   let gameboard = createBoard();
+  
   let player1 = player("player1", "X", [], 0);
   let player2 = player("player2", "O", [], 0);
   let currentPlayer = player1;
   
-  let tieScore = 0;
   
   let scoreDisplay = document.createElement("div");
   scoreDisplay.id = "score-display"
@@ -86,27 +100,27 @@ function gameStart() {
   let player1ScoreDisplay = document.createElement("div");
   player1ScoreDisplay.textContent = `player1 score: ${player1.score}`
   
+  let tieScore = 0;
   let tieScoreDisplay = document.createElement("div");
   tieScoreDisplay.textContent = `Tie: ${tieScore}`
   
   let player2ScoreDisplay = document.createElement("div");
   player2ScoreDisplay.textContent = `player2 score: ${player2.score}`
   
-  
-  let boardUI = document.createElement("div");
-  boardUI.id = "board";
-  
-  let selectionBox = document.createElement("div");
-  selectionBox.id = "selection";
+  let firstPickQuestion = document.createElement("div");
+  firstPickQuestion.id = "first-pick-question";
+  firstPickQuestion.textContent = "Who goes first?";
   
   let firstPickBox = document.createElement("div");
   firstPickBox.id = "first-pick-box";
-  let x = document.createElement("div");
-  x.textContent = "x";
-  x.className = "first-picks"
-  let o = document.createElement("div");
-  o.className = "first-picks"
-  o.textContent = "o";
+  
+  let leftPick = document.createElement("div");
+  leftPick.textContent = "X";
+  leftPick.classList.add("first-picks", "selected-first-pick");
+  
+  let rightPick = document.createElement("div");
+  rightPick.textContent = "O";
+  rightPick.classList.add("first-picks");
   
   body.appendChild(scoreDisplay)
   scoreDisplay.appendChild(player1ScoreDisplay);
@@ -114,9 +128,10 @@ function gameStart() {
   scoreDisplay.appendChild(player2ScoreDisplay);
   body.appendChild(boardUI);
   body.appendChild(selectionBox);
-  selection.appendChild(firstPickBox);
-  firstPickBox.appendChild(x);
-  firstPickBox.appendChild(o);
+  selectionBox.appendChild(firstPickQuestion)
+  selectionBox.appendChild(firstPickBox);
+  firstPickBox.appendChild(leftPick);
+  firstPickBox.appendChild(rightPick);
   
   let state = { roundState: false };
   
@@ -131,13 +146,25 @@ function gameStart() {
         tiles.style.color = ""
       }
       else if (currentPlayer.name == "player2") {
-        tiles.style.color = " "
+        tiles.style.color = ""
       }
       
       placeMarker(i)
       
     })
   }
+  
+  leftPick.addEventListener("click", function(e) {
+    currentPlayer = player1
+    leftPick.classList.add("selected-first-pick");
+    rightPick.classList.remove("selected-first-pick");
+  })
+  
+  rightPick.addEventListener("click", function() {
+    currentPlayer = player2
+    rightPick.classList.add("selected-first-pick");
+    leftPick.classList.remove("selected-first-pick");
+  })
   
 }
 
@@ -197,11 +224,14 @@ function checkWin(currentPlayer, gameboard, state) {
   
 }
 
-startGameBtn.addEventListener("click", () => {
-  box.style.display = "none"
-  gameStart()
-})
-
-gameTitle.style.display = "none"
-box.style.display = "none"
-gameStart()
+(function startBtnListener() {
+  let gameTitle = document.querySelector("h1");
+  let box = document.querySelector("#box");
+  let startGameBtn = document.querySelector("#start-game-btn");
+  
+  startGameBtn.addEventListener("click", function() {
+    gameTitle.style.display = "none"
+    box.style.display = "none"
+    gameStart()
+  })
+})();
