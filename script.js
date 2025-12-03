@@ -37,8 +37,10 @@ function gameStart() {
       return
     }
     
-    checkWin(currentPlayer, gameboard.board.array, state)
-    updateScore(currentPlayer, state)
+    checkWin(currentPlayer, gameboard.board.array, state);
+    
+    updateScore(currentPlayer, state);
+    
     switch (currentPlayer) {
       case player1:
         currentPlayer = player2
@@ -97,11 +99,13 @@ function gameStart() {
   let selectionBox = document.createElement("div");
   selectionBox.id = "selection";
   
-  let firstPick = document.createElement("div");
-  firstPick.id = "first-pick";
+  let firstPickBox = document.createElement("div");
+  firstPickBox.id = "first-pick-box";
   let x = document.createElement("div");
   x.textContent = "x";
+  x.className = "first-picks"
   let o = document.createElement("div");
+  o.className = "first-picks"
   o.textContent = "o";
   
   body.appendChild(scoreDisplay)
@@ -110,7 +114,9 @@ function gameStart() {
   scoreDisplay.appendChild(player2ScoreDisplay);
   body.appendChild(boardUI);
   body.appendChild(selectionBox);
-  selection.appendChild(firstPick);
+  selection.appendChild(firstPickBox);
+  firstPickBox.appendChild(x);
+  firstPickBox.appendChild(o);
   
   let state = { roundState: false };
   
