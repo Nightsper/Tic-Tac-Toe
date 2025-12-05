@@ -22,14 +22,18 @@ function gameStart(player1Name, player2Name) {
   
   let body = document.querySelector("body");
   
+  let startGameTitle = document.querySelector("h1");
+  let startGameBox = document.querySelector("#box");
+  
   let boardUI = document.createElement("div");
-  boardUI.id = "board";
+  boardUI.classList.add("board");
   let selectionBox = document.createElement("div");
   selectionBox.id = "selection";
   
   
   let scoreDisplay = document.createElement("div");
   scoreDisplay.id = "score-display"
+  
   
   let player1ScoreDisplay = document.createElement("div");
   
@@ -57,8 +61,17 @@ function gameStart(player1Name, player2Name) {
   let winnerDisplay = document.createElement("div");
   winnerDisplay.id = "winner-display";
   
+  let winnerDisplayBtns = document.createElement("div");
+  winnerDisplayBtns.id = "winner-display-btns"
+  
+  let restartRoundBtn = document.createElement("button");
+  restartRoundBtn.id = "restart-round-btn";
+  restartRoundBtn.classList.add("display-winner-btns")
+  restartRoundBtn.textContent = "Restart"
+  
   let nextRoundBtn = document.createElement("button");
   nextRoundBtn.id = "next-round-btn";
+  nextRoundBtn.classList.add("display-winner-btns")
   nextRoundBtn.textContent = "Next Round";
   
   let input1 = document.querySelector("#player1-name");
@@ -90,8 +103,9 @@ function gameStart(player1Name, player2Name) {
   
   function placeMarker(i) {
     
-    firstPickBox.style.display = "none";
-    firstPickQuestion.style.display = "none";
+    selection.style.display = "none";
+    boardUI.classList.add("board-active");
+    
     
     if (state.roundState == true) {
       return
@@ -128,24 +142,6 @@ function gameStart(player1Name, player2Name) {
         break;
     }
   };
-  
-  function nextRound() {
-    
-    winnerDisplay.style.display = "none";
-    
-    for (let i = 0; i < gameboard.board.array.length; i++) {
-      gameboard.board.array[i].textContent = "";
-    };
-    
-    for (let i = 0; i < boardUI.children.length; i++) {
-      boardUI.children[i].textContent = "";
-    };
-    
-    state.roundState = false;
-    currentPlayer = player1;
-    
-    console.log(boardUI.children[0].textContent)
-  }
   
   function checkWin(currentPlayer, gameboard, state) {
     
@@ -207,24 +203,33 @@ function gameStart(player1Name, player2Name) {
   
   function displayWinner(input1, input2) {
     
-    
     if (state.roundState == true) {
+      winnerDisplay.style.display = "flex";
+      nextRoundBtn.style.display = "block";
       if (currentPlayer.name == "player1") {
-        
         winnerDisplay.textContent = `${input1.value} wins`
-        boardUI.appendChild(winnerDisplay)
-        selection.appendChild(nextRoundBtn);
+        boardUI.appendChild(winnerDisplay);
+        winnerDisplay.appendChild(winnerDisplayBtns);
+        winnerDisplayBtns.appendChild(restartRoundBtn);
+        winnerDisplayBtns.appendChild(nextRoundBtn);
       }
       else if (currentPlayer.name == "player2") {
         winnerDisplay.textContent = `${input2.value} wins`
-        boardUI.appendChild(winnerDisplay)
-        selection.appendChild(nextRoundBtn);
+        boardUI.appendChild(winnerDisplay);
+        winnerDisplay.appendChild(winnerDisplayBtns);
+        winnerDisplayBtns.appendChild(restartRoundBtn);
+        winnerDisplayBtns.appendChild(nextRoundBtn);
       }
       
     }
     else if (state.roundState == "tie") {
-      winnerDisplay.textContent = `Tied`
-      boardUI.appendChild(winnerDisplay)
+      winnerDisplay.style.display = "flex";
+      nextRoundBtn.style.display = "block";
+      winnerDisplay.textContent = `Tied`;
+      boardUI.appendChild(winnerDisplay);
+      winnerDisplay.appendChild(winnerDisplayBtns);
+      winnerDisplayBtns.appendChild(restartRoundBtn);
+      winnerDisplayBtns.appendChild(nextRoundBtn);
     }
     
   }
@@ -248,6 +253,45 @@ function gameStart(player1Name, player2Name) {
     }
     
   };
+  
+  function restartRound() {
+    
+    for (let i = 0; i < gameboard.board.array.length; i++) {
+      gameboard.board.array[i] = "";
+    };
+    
+    for (let i = 0; i < boardUI.children.length; i++) {
+      boardUI.children[i].textContent = "";
+    };
+    player1.marks = [];
+    player2.marks = [];
+    state.roundState = false;
+    
+    scoreDisplay.style.display = "none";
+    boardUI.style.display = "none";
+    
+    startGameTitle.style.display = "block";
+    startGameBox.style.display = "flex";
+  };
+  
+  function nextRound() {
+    
+    winnerDisplay.style.display = "none";
+    selection.style.display = "flex";
+    
+    for (let i = 0; i < gameboard.board.array.length; i++) {
+      gameboard.board.array[i] = "";
+    };
+    
+    for (let i = 0; i < boardUI.children.length; i++) {
+      boardUI.children[i].textContent = "";
+    };
+    player1.marks = [];
+    player2.marks = [];
+    state.roundState = false;
+    currentPlayer = player1;
+  };
+  
   
   for (let i = 0; i < 9; i++) {
     let tiles = document.createElement("div");
@@ -280,6 +324,10 @@ function gameStart(player1Name, player2Name) {
     leftPick.classList.remove("selected-first-pick");
   })
   
+  restartRoundBtn.addEventListener("click", function() {
+    restartRound()
+  })
+  
   nextRoundBtn.addEventListener("click", function() {
     nextRound()
   })
@@ -288,7 +336,7 @@ function gameStart(player1Name, player2Name) {
 }
 
 (function startBtnListener() {
-  let gameTitle = document.querySelector("h1");
+  let title = document.querySelector("h1");
   let box = document.querySelector("#box");
   let startGameBtn = document.querySelector("#start-game-btn");
   let player1Name = document.querySelector("#player1-name");
@@ -296,7 +344,10 @@ function gameStart(player1Name, player2Name) {
   
   startGameBtn.addEventListener("click", function() {
     gameStart()
-    gameTitle.style.display = "none"
+    /*scoreDisplay.style.display = "none";
+    boardUI.style.display = "none";*/
+    
+    title.style.display = "none"
     box.style.display = "none"
   })
 })();
