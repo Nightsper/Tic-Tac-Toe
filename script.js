@@ -9,13 +9,19 @@ function player(name, marker, marks, score) {
   return { name, marker, marks, score }
 }
 
-function gameStart(player1Name, player2Name) {
+function gameStart(setPlayer) {
+  
+  
   
   let gameboard = createBoard();
   
   let player1 = player("player1", "X", [], 0);
   let player2 = player("player2", "O", [], 0);
-  let currentPlayer = player1;
+  let currentPlayer;
+  
+  if (setPlayer == "set-player1") {
+    currentPlayer = player1
+  }
   
   let state = { roundState: false };
   
@@ -27,6 +33,7 @@ function gameStart(player1Name, player2Name) {
   
   let boardUI = document.createElement("div");
   boardUI.classList.add("board");
+  
   let selectionBox = document.createElement("div");
   selectionBox.id = "selection";
   
@@ -52,7 +59,7 @@ function gameStart(player1Name, player2Name) {
   
   let leftPick = document.createElement("div");
   leftPick.textContent = "X";
-  leftPick.classList.add("first-picks", "selected-first-pick");
+  leftPick.classList.add("first-picks");
   
   let rightPick = document.createElement("div");
   rightPick.textContent = "O";
@@ -78,7 +85,7 @@ function gameStart(player1Name, player2Name) {
   let input2 = document.querySelector("#player2-name");
   
   
-  body.appendChild(scoreDisplay)
+  body.appendChild(scoreDisplay);
   scoreDisplay.appendChild(player1ScoreDisplay);
   scoreDisplay.appendChild(tieScoreDisplay);
   scoreDisplay.appendChild(player2ScoreDisplay);
@@ -94,16 +101,40 @@ function gameStart(player1Name, player2Name) {
     if (!(input1.value == "")) {
       player1ScoreDisplay.textContent = `${input1.value}'s score: ${player1.score}`
     }
+    else if (input1.value == "") {
+      player1ScoreDisplay.textContent = `Player 1's score: ${player1.score}`
+    }
     
     if (!(input2.value == "")) {
       player2ScoreDisplay.textContent = `${input2.value}'s score: ${player2.score}`
+    }
+    else if (input2.value == "") {
+      player2ScoreDisplay.textContent = `Player 2's score: ${player2.score}`
+    }
+    
+  };
+  
+  function highlightFirstPick() {
+    
+    if (currentPlayer.name == "player1") {
+      
+      currentPlayer = player1
+      rightPick.classList.remove("selected-first-pick");
+      
+      leftPick.classList.add("selected-first-pick");
+    }
+    else if (currentPlayer.name == "player2") {
+      currentPlayer = player2
+      leftPick.classList.remove("selected-first-pick");
+      
+      rightPick.classList.add("selected-first-pick");
     }
     
   };
   
   function placeMarker(i) {
     
-    selection.style.display = "none";
+    selectionBox.style.display = "none";
     boardUI.classList.add("board-active");
     
     
@@ -132,15 +163,18 @@ function gameStart(player1Name, player2Name) {
     
     displayWinner(input1, input2)
     
-    
-    switch (currentPlayer) {
-      case player1:
-        currentPlayer = player2
-        break;
-      case player2:
-        currentPlayer = player1
-        break;
+    if (state.roundState == false) {
+      
+      switch (currentPlayer) {
+        case player1:
+          currentPlayer = player2
+          break;
+        case player2:
+          currentPlayer = player1
+          break;
+      }
     }
+    
   };
   
   function checkWin(currentPlayer, gameboard, state) {
@@ -194,11 +228,8 @@ function gameStart(player1Name, player2Name) {
           testArr.push(winningCases[i][j])
           
         }
-        
       }
-      
     }
-    
   };
   
   function displayWinner(input1, input2) {
@@ -277,7 +308,9 @@ function gameStart(player1Name, player2Name) {
   function nextRound() {
     
     winnerDisplay.style.display = "none";
-    selection.style.display = "flex";
+    selectionBox.style.display = "flex";
+    
+    boardUI.classList.toggle("board-active");
     
     for (let i = 0; i < gameboard.board.array.length; i++) {
       gameboard.board.array[i] = "";
@@ -289,7 +322,7 @@ function gameStart(player1Name, player2Name) {
     player1.marks = [];
     player2.marks = [];
     state.roundState = false;
-    currentPlayer = player1;
+    highlightFirstPick()
   };
   
   
@@ -333,20 +366,16 @@ function gameStart(player1Name, player2Name) {
   })
   
   setNames()
+  highlightFirstPick()
 }
 
 (function startBtnListener() {
   let title = document.querySelector("h1");
   let box = document.querySelector("#box");
   let startGameBtn = document.querySelector("#start-game-btn");
-  let player1Name = document.querySelector("#player1-name");
-  let player2Name = document.querySelector("#player2-name");
   
   startGameBtn.addEventListener("click", function() {
-    gameStart()
-    /*scoreDisplay.style.display = "none";
-    boardUI.style.display = "none";*/
-    
+    gameStart("set-player1")
     title.style.display = "none"
     box.style.display = "none"
   })
